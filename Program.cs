@@ -20,15 +20,16 @@ namespace stage_parser
                     int number;
                     if (Int32.TryParse(floor_level.GetParserResult(), out number))
                     {
-                        if (number != 0 && e.Multilevel_floor.HasValue)
-                            Console.WriteLine("Тест не пройден. Помещение многоэтажное\n{0}\nОжидался вывод: {1}, вместо {2}\n",
-                                e.description, 0, number, errorCounter++);
+                        if (e.Multilevel_floor.HasValue)
+                            Console.WriteLine("Тест не пройден.\n{0}\nПолучен этаж <{1}> для мультиэтажного помещения\n",
+                                e.description, number, errorCounter++);
                         if (e.raw_floor_level != number && e.raw_floor_level.HasValue)
-                            Console.WriteLine("Тест не пройден\n{0}\nОжидался вывод: {1}, вместо {2}\n",
+                            Console.WriteLine("Тест не пройден\n{0}\nОжидался вывод: <{1}>, вместо <{2}>\n",
                                 e.description, e.raw_floor_level, number, errorCounter++);
                     }
                     else
-                        Console.WriteLine("Парсер вернул не число\n{0}", e.description, errorCounter++);
+                        if (!e.Multilevel_floor.HasValue)
+                            Console.WriteLine("Парсер вернул не число\n{0}", e.description, errorCounter++);
                 }
             }
             Console.WriteLine("\nВсего тестов: {0}", offerCounter);
