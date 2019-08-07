@@ -11,11 +11,9 @@ namespace stage_parser
         {
             int offerCounter = 0;
             int errorCounter = 0;
-            string newCsvPath = @"C:\Users\matrix\Desktop\processed_floor.csv";
-            File.WriteAllText(newCsvPath, String.Empty);
             using (OfferContext db = new OfferContext())
             {
-                var offer = db.Offers.Where(x => x.raw_floor_level.HasValue).ToList();
+                var offer = db.Offers.Where(x => x.raw_floor_level.HasValue /*|| x.Multilevel_floor.HasValue*/).ToList();
                 foreach (var e in offer)
                 {
                     offerCounter++;
