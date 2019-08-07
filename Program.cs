@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using DataStreamProcess.Processing.Units.CommentParsers;
 using System.Linq;
 
@@ -13,7 +12,7 @@ namespace stage_parser
             int errorCounter = 0;
             using (OfferContext db = new OfferContext())
             {
-                var offer = db.Offers.Where(x => x.raw_floor_level.HasValue /*|| x.Multilevel_floor.HasValue*/).ToList();
+                var offer = db.Offers.Where(x => x.raw_floor_level.HasValue || x.Multilevel_floor.HasValue).ToList();
                 foreach (var e in offer)
                 {
                     offerCounter++;
@@ -21,9 +20,12 @@ namespace stage_parser
                     int number;
                     if (Int32.TryParse(floor_level.GetParserResult(), out number))
                     {
-                        if (e.raw_floor_level != number)
-                            Console.WriteLine("тест не пройден\n{0}\nОжидался вывод: {1}, вместо {2}\n",
-                                e.description, e.raw_floor_level, floor_level.GetParserResult(), errorCounter++);
+                        if (number != 0 && e.Multilevel_floor.HasValue)
+                            Console.WriteLine("Тест не пройден. Помещение многоэтажное\n{0}\nОжидался вывод: {1}, вместо {2}\n",
+                                e.description, 0, number, errorCounter++);
+                        if (e.raw_floor_level != number && e.raw_floor_level.HasValue)
+                            Console.WriteLine("Тест не пройден\n{0}\nОжидался вывод: {1}, вместо {2}\n",
+                                e.description, e.raw_floor_level, number, errorCounter++);
                     }
                     else
                         Console.WriteLine("Парсер вернул не число");
