@@ -28,7 +28,7 @@ namespace stage_parser
                                 e.description, e.raw_floor_level, number, errorCounter++);
                     }
                     else
-                        Console.WriteLine("Парсер вернул не число");
+                        Console.WriteLine("Парсер вернул не число\n{0}", e.description);
                 }
             }
             Console.WriteLine("\nВсего тестов: {0}", offerCounter);
