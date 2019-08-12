@@ -63,7 +63,7 @@ namespace stage_parser
                 string test = Console.ReadLine();
                 Console.Clear();
 
-                var offer = db.Offers.Where(x => (x.raw_floor_level.HasValue || x.Multilevel_floor.HasValue) && x.id == 38013).ToList();
+                var offer = db.Offers.Where(x => (x.raw_floor_level.HasValue || x.Multilevel_floor.HasValue) /*&& x.id == 2410*/).ToList();
                 foreach (var e in offer)
                 {
                     var floor_level = new CommentStageParser(ConvertEnglishLetters(e.description));
