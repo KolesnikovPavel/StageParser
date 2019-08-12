@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 namespace stage_parser
 {
@@ -8,7 +9,7 @@ namespace stage_parser
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(@"Data Source=C:\Users\matrix\source\repos\stage_parser\out_processed_floor.db");
+            optionsBuilder.UseSqlite(@"Data Source=" + ConfigurationManager.AppSettings.Get("DatabasePath"));
         }
     }
 
