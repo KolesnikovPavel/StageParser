@@ -63,14 +63,17 @@ namespace stage_parser
                 string test = Console.ReadLine();
                 Console.Clear();
 
-                var offer = db.Offers.Where(x => (x.raw_floor_level.HasValue || x.Multilevel_floor.HasValue) /*&& x.id < 2000*/).ToList();
+                var offer = db.Offers.Where(x => (x.raw_floor_level.HasValue || x.Multilevel_floor.HasValue) && x.id == 38013).ToList();
                 foreach (var e in offer)
                 {
                     var floor_level = new CommentStageParser(ConvertEnglishLetters(e.description));
                     if (Int32.TryParse(floor_level.GetParserResult(), out int number))
                     {
                         if (test == "да")
-                            DisplayHowParserResultChanged(e, number, changedValues);
+                        {
+                            if (number < 163)
+                                changedValues = DisplayHowParserResultChanged(e, number, changedValues);
+                        }
                         else
                         {
                             if (MoreThanOneFloor(e))
