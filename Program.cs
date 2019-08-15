@@ -16,68 +16,114 @@ namespace stage_parser
             return description;
         }
 
-        public static bool MoreThanOneFloor(stage_parser.Offer offer)
-        {
-            return offer.Multilevel_floor.HasValue && !offer.raw_floor_level.HasValue ? true : false;
-        }
 
         public static bool DatabaseHasFilledValues(stage_parser.Offer offer)
         {
             return offer.raw_floor_level.HasValue || offer.Multilevel_floor.HasValue ? true : false;
         }
 
-        public static void DisplayTestResult (stage_parser.Offer offer, int parser_floor_level)
+        public static bool CheckMultilevel(stage_parser.Offer offer, string check)
         {
-            Console.WriteLine("Тест не пройден. id: {0}\n{1}\n Ожидался этаж: {2}, вместо {3}\n",
-                offer.id, offer.description, offer.raw_floor_level, parser_floor_level);
-        }
-        
-        public static void CompareAndDisplayResult(stage_parser.Offer offer, int parser_floor_level)
-        {
-            if (offer.raw_floor_level != parser_floor_level)
-                DisplayTestResult(offer, parser_floor_level);
+            if (MoreThanOneFloor(offer))
+            {
+                if (check.ToLower() == "да")
+                    return true;
+                else
+                    return false;
+            }
+            return true;
         }
 
-        public static int DisplayHowParserResultChanged(stage_parser.Offer offer, int parser_floor_level, int changedValues)
+        public static bool CheckNoValue(stage_parser.Offer offer, string check)
         {
-            if (offer.floor_level != parser_floor_level && parser_floor_level != offer.raw_floor_level && offer.Multilevel_floor != 0)
-                Console.WriteLine("id: <{0}> было: {1} стало: {2} должно: {3}",
-                    offer.id, offer.floor_level, parser_floor_level, offer.raw_floor_level, changedValues++);
-            return changedValues;
+            if (check.ToLower() == "да")
+                return true;
+            else
+                return false;
         }
+
+
+        public static bool MoreThanOneFloor(stage_parser.Offer offer)
+        {
+            return offer.Multilevel_floor.HasValue && !offer.raw_floor_level.HasValue ? true : false;
+        }
+
+        public static int? ReturnKnownValue(stage_parser.Offer offer)
+        {
+            if (MoreThanOneFloor(offer))
+                return offer.Multilevel_floor;
+            else
+                return offer.raw_floor_level;
+
+        }
+
+        public static bool ParserResultNotCorrect(int? knownValue, int parser_floor_level)
+        {
+            if (knownValue != parser_floor_level)
+                return true;
+            else
+                return false;
+        }
+
+        public static int DisplayTestFailure(stage_parser.Offer offer, int parser_floor_level, int errorCounter)
+        {
+            Console.WriteLine("Тест не пройден. id: {0}\n{1}\n Ожидался этаж: {2}, вместо {3}\n",
+                offer.id, offer.description, ReturnKnownValue(offer), parser_floor_level);
+            return ++errorCounter;
+        }
+
+        public static int DisplayNoValueTestFailure(stage_parser.Offer offer, int errorCounter)
+        {
+            Console.WriteLine("Парсер вернул не число. id <{0}>\n{1}\n",
+                offer.id, offer.description);
+            return ++errorCounter;
+        }
+
+
+        public static void DisplayAllCounters(int offerCounter, int errorCounter)
+        {
+            Console.WriteLine("\nВсего тестов: " + offerCounter);
+            Console.WriteLine("Тестов не пройдено: " + errorCounter);
+        }
+
+        //public static int DisplayHowParserResultChanged(stage_parser.Offer offer, int parser_floor_level, int changedValues)
+        //{
+        //    if (offer.floor_level != parser_floor_level && parser_floor_level != offer.raw_floor_level && offer.Multilevel_floor != 0)
+        //        Console.WriteLine("id: <{0}> было: {1} стало: {2} должно: {3}",
+        //            offer.id, offer.floor_level, parser_floor_level, offer.raw_floor_level, changedValues++);
+        //    return changedValues;
+        //}
 
         public static void Main()
         {
             int offerCounter = 0;
-            int changedValues = 0;
-            string checkMultilevel = "нет";
+            int errorCounter = 0;
+            Console.WriteLine("Включить тесты для многоуровневых помещений? (да/нет)");
+            string checkMultilevelUserResponse = Console.ReadLine();
+            Console.WriteLine("Включить тесты для помещений без этажа? (да/нет)");
+            string checkNoValueUserResponse = Console.ReadLine();
+            Console.Clear();
             using (OfferContext db = new OfferContext())
             {
-                var offers = db.Offers.Where(offer => (DatabaseHasFilledValues(offer))).ToList();
+                var offers = db.Offers.Where(offer => (DatabaseHasFilledValues(offer)) && offer.id == 13768).ToList();
                 foreach (var offer in offers)
                 {
                     offerCounter++;
                     var commentStageParser = new CommentStageParser(ConvertEnglishLetters(offer.description));
                     if (Int32.TryParse(commentStageParser.GetParserResult(), out int parser_floor_level))
                     {
-                        //changedValues = DisplayHowParserResultChanged(offer, parser_floor_level, changedValues);
-                        if (MoreThanOneFloor(offer))
-                        {
-                            if (checkMultilevel != "нет")
-                                DisplayTestResult(offer, parser_floor_level);
-                        }
-                        else
-                        {
-                            CompareAndDisplayResult(offer, parser_floor_level);
-                        }
+                        if (CheckMultilevel(offer, checkMultilevelUserResponse))
+                            if (ParserResultNotCorrect(ReturnKnownValue(offer), parser_floor_level))
+                                errorCounter = DisplayTestFailure(offer, parser_floor_level, errorCounter);
                     }
                     else
-                        Console.WriteLine("Парсер вернул не число. id <{0}>\n{1}\n",
-                            offer.id, offer.description);
+                    {
+                        if (CheckNoValue(offer, checkNoValueUserResponse))
+                            DisplayNoValueTestFailure(offer, errorCounter);
+                    }
                 }
             }
-            Console.WriteLine("\nВсего тестов " + offerCounter);
-            Console.WriteLine("Тестов изменилось " + changedValues);
+            DisplayAllCounters(offerCounter, errorCounter);
         }
     }
 }
