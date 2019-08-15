@@ -100,12 +100,12 @@ namespace stage_parser
             int errorCounter = 0;
             Console.WriteLine("Включить тесты для многоуровневых помещений? (да/нет)");
             string checkMultilevelUserResponse = Console.ReadLine();
-            Console.WriteLine("Включить тесты для помещений без этажа? (да/нет)");
+            Console.WriteLine("Включить тесты в которых этаж не был найден? (да/нет)");
             string checkNoValueUserResponse = Console.ReadLine();
             Console.Clear();
             using (OfferContext db = new OfferContext())
             {
-                var offers = db.Offers.Where(offer => (DatabaseHasFilledValues(offer)) && offer.id == 13768).ToList();
+                var offers = db.Offers.Where(offer => (DatabaseHasFilledValues(offer)) /*&& offer.id == 13768*/).ToList();
                 foreach (var offer in offers)
                 {
                     offerCounter++;
