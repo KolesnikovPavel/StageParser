@@ -53,7 +53,7 @@ namespace stage_parser
             string checkMultilevel = "нет";
             using (OfferContext db = new OfferContext())
             {
-                var offers = db.Offers.Where(offer => /*(DatabaseHasFilledValues(offer)) &&*/ offer.id < 100).ToList();
+                var offers = db.Offers.Where(offer => (DatabaseHasFilledValues(offer))).ToList();
                 foreach (var offer in offers)
                 {
                     offerCounter++;
@@ -61,19 +61,19 @@ namespace stage_parser
                     if (Int32.TryParse(commentStageParser.GetParserResult(), out int parser_floor_level))
                     {
                         //changedValues = DisplayHowParserResultChanged(offer, parser_floor_level, changedValues);
-                        //if (MoreThanOneFloor(offer))
-                        //{
-                        //    if (checkMultilevel != "нет")
-                        //        DisplayTestResult(offer, parser_floor_level);
-                        //}
-                        //else
-                        //{
-                        //    CompareAndDisplayResult(offer, parser_floor_level);
-                        //}
+                        if (MoreThanOneFloor(offer))
+                        {
+                            if (checkMultilevel != "нет")
+                                DisplayTestResult(offer, parser_floor_level);
+                        }
+                        else
+                        {
+                            CompareAndDisplayResult(offer, parser_floor_level);
+                        }
                     }
-                    //else
-                    //    Console.WriteLine("Парсер вернул не число. id <{0}>\n{1}\n",
-                    //        offer.id, offer.description);
+                    else
+                        Console.WriteLine("Парсер вернул не число. id <{0}>\n{1}\n",
+                            offer.id, offer.description);
                 }
             }
             Console.WriteLine("\nВсего тестов " + offerCounter);
