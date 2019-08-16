@@ -91,16 +91,21 @@ namespace stage_parser
 
         //public static int DisplayHowParserResultChanged(stage_parser.Offer offer, int parser_floor_level, int changedValues)
         //{
-        //    if (offer.floor_level != parser_floor_level && parser_floor_level != offer.raw_floor_level && offer.Multilevel_floor != 0)
+        //    if (offer.floor_level != parser_floor_level /*&& parser_floor_level != offer.raw_floor_level*/)
+        //    {
         //        Console.WriteLine("id: <{0}> было: {1} стало: {2} должно: {3}",
-        //            offer.id, offer.floor_level, parser_floor_level, offer.raw_floor_level, changedValues++);
-        //    return changedValues;
+        //            offer.id, offer.floor_level, parser_floor_level, offer.raw_floor_level);
+        //        return ++changedValues;
+        //    }
+        //    else
+        //        return changedValues + 0;
         //}
 
         public static void Main()
         {
             int offerCounter = 0;
             int errorCounter = 0;
+            int changedValues = 0;
             Console.WriteLine("Включить тесты для многоуровневых помещений? (да/нет)");
             string checkMultilevelUserResponse = Console.ReadLine();
             Console.WriteLine("Включить тесты в которых этаж не был найден? (да/нет)");
@@ -108,13 +113,14 @@ namespace stage_parser
             Console.Clear();
             using (OfferContext db = new OfferContext())
             {
-                var offers = db.Offers.Where(offer => (DatabaseHasFilledValues(offer)) /*&& offer.id == 13768*/).ToList();
+                var offers = db.Offers.Where(offer => (DatabaseHasFilledValues(offer)) /*&& offer.id == 87*/).ToList();
                 foreach (var offer in offers)
                 {
                     offerCounter++;
                     var commentStageParser = new CommentStageParser(ConvertEnglishLetters(offer.description));
                     if (Int32.TryParse(commentStageParser.GetParserResult(), out int parser_floor_level))
                     {
+                        //changedValues = DisplayHowParserResultChanged(offer, parser_floor_level, changedValues);
                         if (CheckMultilevel(offer, checkMultilevelUserResponse))
                             if (ParserResultNotCorrect(ReturnKnownValue(offer), parser_floor_level))
                                 errorCounter = DisplayTestFailure(offer, parser_floor_level, errorCounter);
@@ -127,6 +133,7 @@ namespace stage_parser
                 }
             }
             DisplayAllCounters(offerCounter, errorCounter);
+            //Console.WriteLine("Значений изменилось: " + changedValues);
         }
     }
 }
