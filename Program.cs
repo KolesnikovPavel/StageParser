@@ -82,8 +82,11 @@ namespace stage_parser
 
         public static void DisplayAllCounters(int offerCounter, int errorCounter)
         {
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("\nВсего тестов: " + offerCounter);
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Тестов не пройдено: " + errorCounter);
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         //public static int DisplayHowParserResultChanged(stage_parser.Offer offer, int parser_floor_level, int changedValues)
