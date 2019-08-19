@@ -104,7 +104,7 @@ namespace stage_parser
             Console.Clear();
             using (OfferContext db = new OfferContext())
             {
-                var offers = db.Offers.Where(offer => (DatabaseHasFilledValues(offer)) /*&& offer.id == 87*/).ToList();
+                var offers = db.Offers.Where(offer => DatabaseHasFilledValues(offer) /*&& offer.id == 87*/).ToList();
                 foreach (var offer in offers)
                 {
                     offerCounter++;
