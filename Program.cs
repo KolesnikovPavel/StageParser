@@ -19,33 +19,27 @@ namespace stage_parser
 
         public static bool DatabaseHasFilledValues(stage_parser.Offer offer)
         {
-            return offer.raw_floor_level.HasValue || offer.Multilevel_floor.HasValue ? true : false;
+            return offer.raw_floor_level.HasValue || offer.Multilevel_floor.HasValue;
         }
 
         public static bool CheckMultilevel(stage_parser.Offer offer, string check)
         {
             if (MoreThanOneFloor(offer))
             {
-                if (check.ToLower() == "да")
-                    return true;
-                else
-                    return false;
+                return check.ToLower() == "да";
             }
             return true;
         }
 
         public static bool CheckNoValue(stage_parser.Offer offer, string check)
         {
-            if (check.ToLower() == "да")
-                return true;
-            else
-                return false;
+            return check.ToLower() == "да";
         }
 
 
         public static bool MoreThanOneFloor(stage_parser.Offer offer)
         {
-            return offer.Multilevel_floor.HasValue && !offer.raw_floor_level.HasValue ? true : false;
+            return offer.Multilevel_floor.HasValue && !offer.raw_floor_level.HasValue;
         }
 
         public static int? ReturnKnownValue(stage_parser.Offer offer)
@@ -59,20 +53,17 @@ namespace stage_parser
 
         public static bool ParserResultNotCorrect(int? knownValue, int parser_floor_level)
         {
-            if (knownValue != parser_floor_level)
-                return true;
-            else
-                return false;
+            return knownValue != parser_floor_level;
         }
 
-        public static int DisplayTestFailure(stage_parser.Offer offer, int parser_floor_level, int errorCounter)
+        public static int DisplayAndCountTestFailure(stage_parser.Offer offer, int parser_floor_level, int errorCounter)
         {
             Console.WriteLine("Тест не пройден. id: {0}\n{1}\n Ожидался этаж: {2}, вместо {3}\n",
                 offer.id, offer.description, ReturnKnownValue(offer), parser_floor_level);
             return ++errorCounter;
         }
 
-        public static int DisplayNoValueTestFailure(stage_parser.Offer offer, int errorCounter)
+        public static int DisplayAndCountNoValueTestFailure(stage_parser.Offer offer, int errorCounter)
         {
             Console.WriteLine("Парсер вернул не число. id <{0}>\n{1}\n",
                 offer.id, offer.description);
@@ -123,12 +114,12 @@ namespace stage_parser
                         //changedValues = DisplayHowParserResultChanged(offer, parser_floor_level, changedValues);
                         if (CheckMultilevel(offer, checkMultilevelUserResponse))
                             if (ParserResultNotCorrect(ReturnKnownValue(offer), parser_floor_level))
-                                errorCounter = DisplayTestFailure(offer, parser_floor_level, errorCounter);
+                                errorCounter = DisplayAndCountTestFailure(offer, parser_floor_level, errorCounter);
                     }
                     else
                     {
                         if (CheckNoValue(offer, checkNoValueUserResponse))
-                            DisplayNoValueTestFailure(offer, errorCounter);
+                            errorCounter = DisplayAndCountNoValueTestFailure(offer, errorCounter);
                     }
                 }
             }
