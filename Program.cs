@@ -58,7 +58,7 @@ namespace stage_parser
 
         public static int DisplayAndCountTestFailure(stage_parser.Offer offer, int parser_floor_level, int errorCounter)
         {
-            Console.WriteLine("Тест не пройден. id: {0}\n{1}\n Ожидался этаж: {2}, вместо {3}\n",
+            Console.WriteLine("Тест не пройден. id: {0}\n{1}\nОжидался этаж: {2}, вместо {3}\n",
                 offer.id, offer.description, ReturnKnownValue(offer), parser_floor_level);
             return ++errorCounter;
         }
@@ -104,7 +104,7 @@ namespace stage_parser
             Console.Clear();
             using (OfferContext db = new OfferContext())
             {
-                var offers = db.Offers.Where(offer => (DatabaseHasFilledValues(offer))/* && offer.id == 504*/).ToList();
+                var offers = db.Offers.Where(offer => (DatabaseHasFilledValues(offer)) /*&& offer.id == 87*/).ToList();
                 foreach (var offer in offers)
                 {
                     offerCounter++;
