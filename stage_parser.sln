@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "stage_parser", "stage_parser.csproj", "{5BDB1DFE-2E3C-4398-8100-2E35D38EEE54}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StageParserService.Tests", "StageParserService.Tests\StageParserService.Tests.csproj", "{30B87148-337B-49C5-B22A-2C8AF183185C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentStageParser", "CommentStageParser\CommentStageParser.csproj", "{7E45AFDF-A6CB-4627-B675-0FA934EF57C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{5BDB1DFE-2E3C-4398-8100-2E35D38EEE54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BDB1DFE-2E3C-4398-8100-2E35D38EEE54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BDB1DFE-2E3C-4398-8100-2E35D38EEE54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30B87148-337B-49C5-B22A-2C8AF183185C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30B87148-337B-49C5-B22A-2C8AF183185C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30B87148-337B-49C5-B22A-2C8AF183185C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30B87148-337B-49C5-B22A-2C8AF183185C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E45AFDF-A6CB-4627-B675-0FA934EF57C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E45AFDF-A6CB-4627-B675-0FA934EF57C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E45AFDF-A6CB-4627-B675-0FA934EF57C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E45AFDF-A6CB-4627-B675-0FA934EF57C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

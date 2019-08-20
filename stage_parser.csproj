@@ -6,9 +6,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="CommentStageParser\**" />
+    <Compile Remove="Migrations\**" />
+    <Compile Remove="StageParserService.Tests\**" />
+    <EmbeddedResource Remove="CommentStageParser\**" />
+    <EmbeddedResource Remove="Migrations\**" />
+    <EmbeddedResource Remove="StageParserService.Tests\**" />
+    <None Remove="CommentStageParser\**" />
+    <None Remove="Migrations\**" />
+    <None Remove="StageParserService.Tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove=".gitignore" />
+    <None Remove="out_processed_floor.db" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.6.0-preview7.19362.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="CommentStageParser\CommentStageParser.csproj" />
+    <ProjectReference Include="StageParserService.Tests\StageParserService.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
