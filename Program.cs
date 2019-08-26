@@ -1,6 +1,7 @@
 ﻿using System;
 using DataStreamProcess.Processing.Units.CommentParsers;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace stage_parser
 {
@@ -13,6 +14,20 @@ namespace stage_parser
             for (int i = 0; i < engLetters.Length; i++)
                 if (description.Contains(engLetters[i]))
                     description = description.Replace(engLetters[i], ruLetters[i]);
+            return description;
+        }
+
+        private static string RemoveSentenceWithStopWords(string description)
+        {
+            string[] stopWords = { "супермаркет", "магнит", "продуктовый", "магазин", "столовая", "отеля", "отель", "фитнес", "кафе", "ресторан", "банк", "салон", "связи", "галерея", "ресепшн" };
+            var sentenceCollection = Regex.Matches(description, @"([А-Яа-я]+)([а-яА-Я\d, +\-:;A-–Za-z()«»#&\/\n]+?)([,.;!?]+)");
+            foreach (Match wd in sentenceCollection)
+                foreach (string sw in stopWords)
+                    if (wd.Value.ToLower().Contains(sw) && description.ToLower().Contains(sw))
+                    {
+                        description = description.Remove(description.IndexOf(wd.Value), wd.Length);
+                        break;
+                    }
             return description;
         }
 
@@ -104,11 +119,11 @@ namespace stage_parser
             Console.Clear();
             using (OfferContext db = new OfferContext())
             {
-                var offers = db.Offers.Where(offer => DatabaseHasFilledValues(offer)/* && offer.id == 46345*/).ToList();
+                var offers = db.Offers.Where(offer => DatabaseHasFilledValues(offer) && offer.id == 3584).ToList();
                 foreach (var offer in offers)
                 {
                     offerCounter++;
-                    var commentStageParser = new CommentStageParser(ConvertEnglishLetters(offer.description));
+                    var commentStageParser = new CommentStageParser(RemoveSentenceWithStopWords(ConvertEnglishLetters(offer.description)));
                     if (Int32.TryParse(commentStageParser.GetParserResult(), out int parser_floor_level))
                     {
                         //changedValues = DisplayHowParserResultChanged(offer, parser_floor_level, changedValues);
