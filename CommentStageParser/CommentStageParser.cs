@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace DataStreamProcess.Processing.Units.CommentParsers
@@ -46,16 +45,16 @@ namespace DataStreamProcess.Processing.Units.CommentParsers
             }
         }
 
-        public string GetParserResult()
+        public int? GetParserResult()
         {
             if (this._stagesCollection.Count > 0)
             {
                 int minId = this._stagesMatchIndex.IndexOf(this._stagesMatchIndex.Min());
-                return this._stagesCollection[minId].ToString();
+                return this._stagesCollection[minId];
             }
             else
             {
-                return "";
+                return null;
             }
         }
 
@@ -96,7 +95,7 @@ namespace DataStreamProcess.Processing.Units.CommentParsers
             MatchCollection st00 = Regex.Matches(comment, @"(на[ \s]|[ ]*)+([\d]+?|[первом]{4,}?|[втором]{4,}?|[третьем]{4,}?|[подземном]{4,}?|[цокольном]{4,}?|[четвертом]{4,}?|[пятом]{4,}?|[шестом]{4,}?|[седьмом]{4,}?|[восьмом]{4,}?|[девятом]{4,}?|[десятом]{4,}?)[ \s-мое–,]+?([, ]+?[а-я]{4,}?[, ]+?)этаже[ \s!.,-;]+?");
 
             //1-ий этаж, 2-ой этаж
-            MatchCollection st1 = Regex.Matches(comment, @"(\d{1,2})(?!\n)[ \s-ыйои–]+этаж[ \s\/!.,;]+?(?!-\d|э)(?!-)");
+            MatchCollection st1 = Regex.Matches(comment, @"(\d{1,3})(?!\n)[ \s-ыйои–]+этаж-*[ \s\/!.,;]+?(?!-)(?!э)");
 
             //этаж 1,  этаж первый
             //MatchCollection st2 = Regex.Matches(comment, @"этаж[ :\s]+([\d]{1,2}|[первый]{4,}|[второй]{4,}|[третий]{4,}|[подземный]{4,}|[цокольный]{4,}|[четвертый]{4,}|[пятый]{4,}|[шестой]{4,}|[седьмой]{4,}|[восьмой]{4,}|[девятый]{4,}|[десятый]{4,})[ :.!,\s;]+?");
