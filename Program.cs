@@ -7,10 +7,10 @@ namespace stage_parser
 {
     public class Program
     {
-        public static string ConvertEnglishLetters(string description)
+        public static string ConvertLetters(string description)
         {
-            string[] engLetters = new string[] { "A", "a", "E", "e", "T", "Y", "y", "O", "o", "P", "p", "H", "K", "k", "X", "x", "C", "c", "B", "b", "N", "n", "M", "m" };
-            string[] ruLetters = new string[] { "А", "а", "Е", "е", "Т", "У", "у", "О", "о", "Р", "р", "Н", "К", "к", "Х", "х", "С", "с", "В", "ь", "И", "п", "М", "м" };
+            string[] engLetters = new string[] { "ё", "A", "a", "E", "e", "T", "Y", "y", "O", "o", "P", "p", "H", "K", "k", "X", "x", "C", "c", "B", "b", "N", "n", "M", "m" };
+            string[] ruLetters = new string[] { "е", "А", "а", "Е", "е", "Т", "У", "у", "О", "о", "Р", "р", "Н", "К", "к", "Х", "х", "С", "с", "В", "ь", "И", "п", "М", "м" };
             for (int i = 0; i < engLetters.Length; i++)
                 if (description.Contains(engLetters[i]))
                     description = description.Replace(engLetters[i], ruLetters[i]);
@@ -66,12 +66,12 @@ namespace stage_parser
 
         }
 
-        public static bool ParserResultNotCorrect(int? knownValue, int parser_floor_level)
+        public static bool ParserResultNotCorrect(int? knownValue, int? parser_floor_level)
         {
             return knownValue != parser_floor_level;
         }
 
-        public static int DisplayAndCountTestFailure(stage_parser.Offer offer, int parser_floor_level, int errorCounter)
+        public static int DisplayAndCountTestFailure(stage_parser.Offer offer, int? parser_floor_level, int errorCounter)
         {
             Console.WriteLine("Тест не пройден. id: {0}\n{1}\nОжидался этаж: {2}, вместо {3}\n",
                 offer.id, offer.description, ReturnKnownValue(offer), parser_floor_level);
@@ -95,23 +95,10 @@ namespace stage_parser
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 
-        //public static int DisplayHowParserResultChanged(stage_parser.Offer offer, int parser_floor_level, int changedValues)
-        //{
-        //    if (offer.floor_level != parser_floor_level /*&& parser_floor_level != offer.raw_floor_level*/)
-        //    {
-        //        Console.WriteLine("id: <{0}> было: {1} стало: {2} должно: {3}",
-        //            offer.id, offer.floor_level, parser_floor_level, offer.raw_floor_level);
-        //        return ++changedValues;
-        //    }
-        //    else
-        //        return changedValues + 0;
-        //}
-
         public static void Main()
         {
             int offerCounter = 0;
             int errorCounter = 0;
-            //int changedValues = 0;
             Console.WriteLine("Включить тесты для многоуровневых помещений? (да/нет)");
             string checkMultilevelUserResponse = Console.ReadLine();
             Console.WriteLine("Включить тесты в которых этаж не был найден? (да/нет)");
@@ -119,14 +106,14 @@ namespace stage_parser
             Console.Clear();
             using (OfferContext db = new OfferContext())
             {
-                var offers = db.Offers.Where(offer => DatabaseHasFilledValues(offer)/* && offer.id == 3584*/).ToList();
+                var offers = db.Offers.Where(offer => DatabaseHasFilledValues(offer) /*&& offer.id == 46900*/).ToList();
                 foreach (var offer in offers)
                 {
                     offerCounter++;
-                    var commentStageParser = new CommentStageParser(RemoveSentenceWithStopWords(ConvertEnglishLetters(offer.description)));
-                    if (Int32.TryParse(commentStageParser.GetParserResult(), out int parser_floor_level))
+                    var commentStageParser = new CommentStageParser(RemoveSentenceWithStopWords(ConvertLetters(offer.description)));
+                    int? parser_floor_level = commentStageParser.GetParserResult();
+                    if (parser_floor_level != null)
                     {
-                        //changedValues = DisplayHowParserResultChanged(offer, parser_floor_level, changedValues);
                         if (CheckMultilevel(offer, checkMultilevelUserResponse))
                             if (ParserResultNotCorrect(ReturnKnownValue(offer), parser_floor_level))
                                 errorCounter = DisplayAndCountTestFailure(offer, parser_floor_level, errorCounter);
@@ -139,7 +126,6 @@ namespace stage_parser
                 }
             }
             DisplayAllCounters(offerCounter, errorCounter);
-            //Console.WriteLine("Значений изменилось: " + changedValues);
         }
     }
 }
