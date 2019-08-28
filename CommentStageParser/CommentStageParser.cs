@@ -105,20 +105,6 @@ namespace DataStreamProcess.Processing.Units.CommentParsers
             MatchCollection st3 = Regex.Matches(comment, @"этаж[ \s\-]+[\d](?=[\/][\d])");
 
 
-            //Test
-            //1/9 этаж
-            MatchCollection stTest1 = Regex.Matches(comment, @"[\d][\/][\d]+[\s]этаж[ \s-\/!.,;]");
-            //первый/9 этаж (возвращает 1)
-            MatchCollection stTest2 = Regex.Matches(comment, @"([первый]{4,}|[второй]{4,}|[третий]{4,}|[подземный]{4,}|[цокольный]{4,}|[цокольное]{4,}|[четвертый]{4,}|[пятый]{4,}|[шестой]{4,}|[седьмой]{4,}|[восьмой]{4,}|[девятый]{4,}|[десятый]{4,})[\/][\d]+[\s]этаж");
-            //Первом
-            //MatchCollection stTest3 = Regex.Matches(comment, @"([первом]{4,}|[втором]{4,}|[третьем]{4,}|[подземном]{4,}|[цокольном]{4,}|[четвертом]{4,}|[пятом]{4,}|[шестом]{4,}|[седьмом]{4,}|[восьмом]{4,}|[девятом]{4,}|[десятом]{4,})[\W]+этаж");
-            MatchCollection stTest4 = Regex.Matches(comment, @"этаж[\/]этажность[!;.,:\s]*([\d])*[\/][\d]*");
-            //1 этаж 9-ти этажного
-            MatchCollection stTest5 = Regex.Matches(comment, @"([\d]+[ \s-ыйои–]*)этаж[ \s-!.,;]+[\d]+[ \s-тиx]*этаж");
-            //По документам цоколь
-            //MatchCollection stTest6 = Regex.Matches(comment, @"по документам[ !;.,:\s]*([первый]{4,}|[второй]{4,}|[третий]{4,}|[подземный]{4,}|[цокольный]{4,}|[цокольное]{4,}|[четвертый]{4,}|[пятый]{4,}|[шестой]{4,}|[седьмой]{4,}|[восьмой]{4,}|[девятый]{4,}|[десятый]{4,})");
-
-
             //на 1/9 (возвращает на 1)
             MatchCollection st4 = Regex.Matches(comment, @"[\s]на[ \s]+[\d](?=[\/][\d])");
             //первый этаж, второй этаж
@@ -144,6 +130,16 @@ namespace DataStreamProcess.Processing.Units.CommentParsers
 
             MatchCollection st14 = Regex.Matches(comment, @"на[ \s]+[\d]+[ этаже]+(?=[\/][\d]+[ этажного]+)");
 
+            //1/9 этаж
+            MatchCollection st15 = Regex.Matches(comment, @"[\d][\/][\d]+[\s]этаж[ \s-\/!.,;]");
+            //первый/9 этаж (возвращает 1)
+            MatchCollection st16 = Regex.Matches(comment, @"([первый]{4,}|[второй]{4,}|[третий]{4,}|[подземный]{4,}|[цокольный]{4,}|[цокольное]{4,}|[четвертый]{4,}|[пятый]{4,}|[шестой]{4,}|[седьмой]{4,}|[восьмой]{4,}|[девятый]{4,}|[десятый]{4,})[\/][\d]+[\s]этаж");
+            //этаж/этажность 1/3
+            MatchCollection st17 = Regex.Matches(comment, @"этаж[\/]этажность[!;.,:\s]*([\d])*[\/][\d]*");
+            //1 этаж 9-ти этажного
+            MatchCollection st18 = Regex.Matches(comment, @"([\d]+[ \s-ыйои–]*)этаж[ \s-!.,;]+[\d]+[ \s-тиx]*этаж");
+
+
             string elementsToFind = @"([первом]{4,}|[втором]{4,}|[третьем]{4,}|[подземном]{4,}|[цокольном]{5,}|[четвертом]{4,}|[пятом]{4,}|[шестом]{4,}|[седьмом]{4,}|[восьмом]{4,}|[девятом]{4,}|[десятом]{4,})";
             this.FindStringStage(st8, elementsToFind, this._digitsArr1, this._digitInt1);
 
@@ -157,7 +153,7 @@ namespace DataStreamProcess.Processing.Units.CommentParsers
 
             //Test
             elementsToFind = @"([первый]{4,}|[второй]{4,}|[третий]{4,}|[подземный]{4,}|[цокольный]{4,}|[цокольное]{4,}|[четвертый]{4,}|[пятый]{4,}|[шестой]{4,}|[седьмой]{4,}|[восьмой]{4,}|[девятый]{4,}|[десятый]{4,})";
-            this.FindStringStage(stTest2, elementsToFind, this._digitsArr1, this._digitInt2);
+            this.FindStringStage(st16, elementsToFind, this._digitsArr1, this._digitInt2);
 
             //elementsToFind = @"по документам[ !;.,:\s]*([первый]{4,}|[второй]{4,}|[третий]{4,}|[подземный]{4,}|[цокольный]{4,}|[цокольное]{4,}|[четвертый]{4,}|[пятый]{4,}|[шестой]{4,}|[седьмой]{4,}|[восьмой]{4,}|[девятый]{4,}|[десятый]{4,})";
             //this.FindStringStage(stTest6, elementsToFind, this._digitsArr1, this._digitInt2);
@@ -174,9 +170,9 @@ namespace DataStreamProcess.Processing.Units.CommentParsers
 
             this.FindNumericStages(st1);
             this.FindNumericStages(st3);
-            this.FindNumericStages(stTest1);
-            this.FindNumericStages(stTest4);
-            this.FindNumericStages(stTest5);
+            this.FindNumericStages(st15);
+            this.FindNumericStages(st17);
+            this.FindNumericStages(st18);
             this.FindNumericStages(st4);
             this.FindNumericStages(st7);
             this.FindNumericStages(st9);
