@@ -46,7 +46,7 @@ namespace stage_parser
             return true;
         }
 
-        public static bool CheckNoValue(stage_parser.Offer offer, string check)
+        public static bool CheckNoValue(string check)
         {
             return check.ToLower() == "да";
         }
@@ -120,7 +120,7 @@ namespace stage_parser
                     }
                     else
                     {
-                        if (CheckNoValue(offer, checkNoValueUserResponse))
+                        if (CheckNoValue(checkNoValueUserResponse))
                             errorCounter = DisplayAndCountNoValueTestFailure(offer, errorCounter);
                     }
                 }
