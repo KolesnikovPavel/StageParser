@@ -7,6 +7,7 @@ namespace stage_parser
 {
     public class Program
     {
+        //Мб лучше вынести в отдельный проект
         public static string ConvertLetters(string description)
         {
             string[] engLetters = new string[] { "ё", "A", "a", "E", "e", "T", "Y", "y", "O", "o", "P", "p", "H", "K", "k", "X", "x", "C", "c", "B", "b", "N", "n", "M", "m" };
@@ -19,16 +20,27 @@ namespace stage_parser
 
         private static string RemoveSentenceWithStopWords(string description)
         {
-            string[] stopWords = { "супермаркет", "магнит", "продуктовый", "магазин", "столовая", "отеля", "отель", "фитнес", "кафе", "ресторан", "банк", "салон", "связи", "галерея", "ресепшн" };
-            var sentenceCollection = Regex.Matches(description, @"([А-Яа-я]+)([а-яА-Я\d, +\-:;A-–Za-z()«»#&\/\n]+?)([,.;!?]+)");
+            string[] stopWords = { "дисконт-центр", "дисконт центр", "супермаркет", "магнит", "продуктовый", "магазин", "столовая", "отеля", "отель", "фитнес", "кафе", "ресторан", "банк", "салон", "связи", "галерея", "ресепшн" };
+            //string[] prepositions = { "под", "для" };
+            var sentenceCollection = Regex.Matches(description, @"([А-Яа-я]+)([а-яА-Я\d, +\-:;A-–Za-z()«»#&\/\n]+?)([.;!?]+)");
             foreach (Match wd in sentenceCollection)
                 foreach (string sw in stopWords)
-                    if (wd.Value.ToLower().Contains(sw) && description.ToLower().Contains(sw))
+                    if (wd.Value.ToLower().Contains(sw) && !ContainsPrepositions(wd) && description.ToLower().Contains(sw))
                     {
                         description = description.Remove(description.IndexOf(wd.Value), wd.Length);
                         break;
                     }
             return description;
+        }
+
+        public static bool ContainsPrepositions (Match wd)
+        {
+            bool contains = false;
+            string[] prepositions = { "под", "для" };
+            foreach (string pretext in prepositions)
+                if (wd.Value.ToLower().Contains(pretext))
+                    contains = true;
+            return contains;
         }
 
 
